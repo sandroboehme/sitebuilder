@@ -1,0 +1,7 @@
+{
+	"jcr:primaryType": "nt:unstructured",
+    "sling:resourceType": "sling/sitebuilder/component-stock",
+    "4" : {
+    	"value" : "This is the paragraph text."
+    }
+}

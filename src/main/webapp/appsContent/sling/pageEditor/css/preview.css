@@ -1,0 +1,33 @@
+
+#page-preview .component-container, #page-preview .component-container.col-xs-4, #page-preview  .component-container.col-xs-12, .preview-container .component-container.col-xs-4, #page-preview .component-container.col-xs-4, .preview-container .component-container.col-md-12 {
+	border: 1px dashed lightgray;
+	border-radius: 5px;
+	min-height: 50px;	
+}
+#page-preview .component [data-component-id="bs-call-script"]{
+	border: 1px solid darkgray;
+	border-radius: 5px;
+	min-height: 50px;		
+}
+
+#edit-col {
+	padding-left: 0;	
+}
+
+.sidebar-container {
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+.component-wrapper {
+    margin: 5px;
+}
+.script-container {
+    padding: 0 15px 0 15px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+
+.component-toolbar .glyphicon {
+	color: black;
+}
