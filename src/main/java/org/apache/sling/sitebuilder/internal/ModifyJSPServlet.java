@@ -186,13 +186,13 @@ public class ModifyJSPServlet extends AbstractPostOperation {
 
 			Resource IdScriptContainerResource = resolvedIdScriptContainer.getResource();
 			Resource sourceResource = resourceResolver.getResource(IdScriptContainerResource.getPath()+"/"+id);
-			if (operation.isAddOperation() || operation.isOrderOperation()){
+			if (sourceResource != null && (operation.isAddOperation() || operation.isOrderOperation())){
 				Resource targetParentResource = resolvedReferenceIdScriptContainer.getResource();
 				if (!sameResources || operation.isAddOperation()){
 					copy(resourceResolver, sourceResource, targetParentResource, ""+newComponentId);
 				}
 			}
-			if ((!sameResources && operation.isOrderOperation()) || operation == ModifyServletOperation.DELETE){
+			if (sourceResource != null && ((!sameResources && operation.isOrderOperation()) || operation == ModifyServletOperation.DELETE)){
 				resourceResolver.delete(sourceResource);
 			}
 

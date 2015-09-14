@@ -5,7 +5,10 @@ var iFrameContent = null;
 			var idStack = [];
 			var scriptComponentStack = component.parents('.script-container');
 			scriptComponentStack.each(function(){
-				idStack.unshift($(this).attr("data-component-id"));
+				var isParameterComponent = $(this).is(component);
+				if (!isParameterComponent) {
+					idStack.unshift($(this).attr("data-component-id"));
+				}
 			});
 			return idStack.join("_");
 		}
@@ -205,7 +208,12 @@ var iFrameContent = null;
 		    	}
 		    });
 		}
-		
+
+		// create namespace to avoid compilation errors in the component stock
+		var org = org || {};
+		org.sling = org.sling || {};
+		org.sling.sitebuilder = org.sling.sitebuilder || {};
+		org.sling.sitebuilder.componentScripts = {};
 		
 		$( document ).ready(function() {
 			$('#iframe_editor').load(function () {
@@ -225,7 +233,7 @@ var iFrameContent = null;
 			        cursorAt: { top: 0, left: 0 },
 					start: function( event, ui ) {
 						var componentType = $(this).attr("data-component-type");
-						var newComponent = $("#"+componentType+" .component").clone();
+						var newComponent = $("#"+componentType+" .component:first").clone();
 						ui.helper.empty();
 						ui.helper.append($('#prototypes .component-wrapper .component-toolbar').clone())
 						ui.helper.append(newComponent);
@@ -262,5 +270,6 @@ var iFrameContent = null;
 				serverSideEnrichment();
 				
 				$('[data-toggle="tooltip"]').tooltip();
+				
 			});
 		});

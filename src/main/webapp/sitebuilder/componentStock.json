@@ -3,5 +3,8 @@
     "sling:resourceType": "sling/sitebuilder/component-stock",
     "4" : {
     	"value" : "This is the paragraph text."
-    }
+    },
+    "5" : {
+    	"src" : "http://images.freeimages.com/images/thumbs/23e/mercedes-1485180.jpg"
+    }    
 }
