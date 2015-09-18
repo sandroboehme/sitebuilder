@@ -57,123 +57,226 @@
 				<h4>Web Component Palette</h4>
 				<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 					<div class="panel panel-default">
-						<div class="panel-heading" role="tab" id="headingOne">
+						<div class="panel-heading" role="tab" id="heading-bs-row-4-4-4">
 							<h4 class="panel-title">
 								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true"
-									aria-controls="collapseOne"><span class="component-label" data-component-type="bs-row-4-4-4"> Row 4-4-4 <span
+									aria-controls="collapse-bs-row-4-4-4"><span class="component-label" data-component-type="bs-row-4-4-4"> Row 4-4-4 <span
 										class="drag small glyphicon glyphicon-move"></span>
 								</span></a>
 							</h4>
 						</div>
-						<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+						<div id="collapse-bs-row-4-4-4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-row-4-4-4">
 							<div class="panel-body">No 'Row 4-4-4' properties.</div>
 						</div>
 					</div>
 					<div class="panel panel-default">
-						<div class="panel-heading" role="tab" id="headingTwo">
+						<div class="panel-heading" role="tab" id="heading-bs-row-12">
 							<h4 class="panel-title">
 								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true"
-									aria-controls="collapseTwo"><span class="component-label" data-component-type="bs-row-12"> Row 12 <span
+									aria-controls="collapse-bs-row-12"><span class="component-label" data-component-type="bs-row-12"> Row 12 <span
 										class="drag small glyphicon glyphicon-move"></span>
 								</span></a>
 							</h4>
 						</div>
-						<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+						<div id="collapse-bs-row-12" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-row-12">
 							<div class="panel-body">No 'Row 12' properties.</div>
 						</div>
 					</div>
 					<div class="panel panel-default">
-						<div class="panel-heading" role="tab" id="headingThree">
-							<h4 class="panel-title">
-								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true"
-									aria-controls="collapseThree"><span class="component-label" data-component-type="bs-button"> Button <span
-										class="drag small glyphicon glyphicon-move"></span>
-								</span></a>
-							</h4>
-						</div>
-						<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-							<div class="panel-body">No 'Button' properties.</div>
-						</div>
-					</div>
-					<div class="panel panel-default">
-						<div class="panel-heading" role="tab" id="headingFour">
+						<div class="panel-heading" role="tab" id="heading-bs-p">
 							<h4 class="panel-title">
 								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="true"
-									aria-controls="collapseFour"><span class="component-label" data-component-type="bs-p"> Paragraph <span
+									aria-controls="collapse-bs-p"><span class="component-label" data-component-type="bs-p"> Paragraph <span
 										class="drag small glyphicon glyphicon-move"></span>
 								</span></a>
 							</h4>
 						</div>
-						<div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+						<div id="collapse-bs-p" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-p">
 							<div class="panel-body">No 'Paragraph' properties.</div>
 						</div>
 					</div>
 					<div class="panel panel-default">
-						<div class="panel-heading" role="tab" id="headingFive">
+						<div class="panel-heading" role="tab" id="heading-bs-h1">
 							<h4 class="panel-title">
 								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="true"
-									aria-controls="collapseFive"><span class="component-label" data-component-type="bs-h1"> H1 <span
+									aria-controls="collapse-bs-h1"><span class="component-label" data-component-type="bs-h1"> H1 <span
 										class="drag small glyphicon glyphicon-move"></span>
 								</span></a>
 							</h4>
 						</div>
-						<div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+						<div id="collapse-bs-h1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-h1">
 							<div class="panel-body">No 'H1' properties.</div>
 						</div>
 					</div>
 					<div class="panel panel-default">
-						<div class="panel-heading" role="tab" id="headingSix">
+						<div class="panel-heading" role="tab" id="heading-bs-navbar">
 							<h4 class="panel-title">
 								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="true"
-									aria-controls="collapseSix"><span class="component-label" data-component-type="bs-navbar"> Navbar <span
+									aria-controls="collapse-bs-navbar"><span class="component-label" data-component-type="bs-navbar"> Navbar <span
 										class="drag small glyphicon glyphicon-move"></span>
 								</span></a>
 							</h4>
 						</div>
-						<div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+						<div id="collapse-bs-navbar" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-navbar">
 							<div class="panel-body">No 'Navbar' properties.</div>
 						</div>
 					</div>
 					<div class="panel panel-default">
-						<div class="panel-heading" role="tab" id="headingSeven">
+						<div class="panel-heading" role="tab" id="heading-img">
 							<h4 class="panel-title">
 								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="true"
-									aria-controls="collapseSeven"><span class="component-label" data-component-type="img"> Image <span
+									aria-controls="collapse-img"><span class="component-label" data-component-type="img"> Image <span
 										class="drag small glyphicon glyphicon-move"></span>
 								</span></a>
 							</h4>
 						</div>
-						<div id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+						<div id="collapse-img" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-img">
 							<div class="panel-body">No 'Image' properties.</div>
 						</div>
 					</div>
 					<div class="panel panel-default">
-						<div class="panel-heading" role="tab" id="headingEight">
+						<div class="panel-heading" role="tab" id="heading-sling-include">
 							<h4 class="panel-title">
-								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseEight" aria-expanded="true"
-									aria-controls="collapseEight"> <span class="component-label" data-component-type="sling-include"> Include
+								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#sling-include-entry" aria-expanded="true"
+									aria-controls="sling-include-entry"> <span class="component-label" data-component-type="sling-include"> Include
 										Script <span class="drag small glyphicon glyphicon-move"></span>
 								</span></a>
 							</h4>
 						</div>
-						<div id="collapseEight" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingEight">
+						<div id="sling-include-entry" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-sling-include">
 							<div class="panel-body">
 								<form>
 									<div class="checkbox">
-										<label> <input type="checkbox">Copy a prototype to that paths
+										<label> <input name="copy" checked type="checkbox">Copy a prototype to that paths
 										</label>
 									</div>
 									<div class="form-group">
-										<label for="exampleInputEmail1">Resource Path:</label> <input type="email" class="form-control" id="exampleInputEmail1"
-											placeholder="Email">
+										<label for="resource_path">Resource Path:</label> <input type="text" class="form-control" id="resource_path" name="resource_path"
+											placeholder="Resource Path">
 									</div>
 									<div class="form-group">
-										<label for="exampleInputPassword1">Script Resource Path:</label> <input type="password" class="form-control"
-											id="exampleInputPassword1" placeholder="Password">
+										<label for="script_resource_path">Script Resource Path:</label> <input type="text" class="form-control"
+											id="script_resource_path" name="script_resource_path" placeholder="Script Resource Path">
 									</div>
-									<button type="submit" class="btn btn-default">Submit</button>
+									<div class="form-group">
+										<label for="resource_type">Resource Type:</label> <input type="text" class="form-control"
+											id="resource_type" name="resource_type" placeholder="Resource Type">
+									</div>
 								</form>
 							</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading" role="tab" id="heading-sling-call">
+							<h4 class="panel-title">
+								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#sling-call-entry" aria-expanded="true"
+									aria-controls="sling-call-entry"> <span class="component-label" data-component-type="sling-call"> Call
+										Script <span class="drag small glyphicon glyphicon-move"></span>
+								</span></a>
+							</h4>
+						</div>
+						<div id="sling-call-entry" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-sling-call">
+							<div class="panel-body">
+								<form>
+									<div class="checkbox">
+										<label> <input name="copy" checked type="checkbox">Copy a prototype to that path
+										</label>
+									</div>
+									<div class="form-group">
+										<label for="script_resource_path">Script Resource Path:</label> <input type="text" class="form-control"
+											id="script_resource_path" name="script_resource_path" placeholder="Script Resource Path">
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading" role="tab" id="heading-bs-form">
+							<h4 class="panel-title">
+								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#bs-form-entry" aria-expanded="true"
+									aria-controls="bs-form-entry"> <span class="component-label" data-component-type="bs-form"> Form <span class="drag small glyphicon glyphicon-move"></span>
+								</span></a>
+							</h4>
+						</div>
+						<div id="bs-form-entry" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-form">
+							<div class="panel-body">No form properties</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading" role="tab" id="heading-bs-text-field">
+							<h4 class="panel-title">
+								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#bs-text-field-entry" aria-expanded="true"
+									aria-controls="bs-text-field-entry"> <span class="component-label" data-component-type="bs-text-field"> Text Field <span class="drag small glyphicon glyphicon-move"></span>
+								</span></a>
+							</h4>
+						</div>
+						<div id="bs-text-field-entry" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-text-field">
+							<div class="panel-body">No form properties</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading" role="tab" id="heading-bs-button-submit">
+							<h4 class="panel-title">
+								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true"
+									aria-controls="collapse-bs-button-submit"><span class="component-label" data-component-type="bs-button-submit"> Submit Button <span
+										class="drag small glyphicon glyphicon-move"></span>
+								</span></a>
+							</h4>
+						</div>
+						<div id="collapse-bs-button-submit" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-button-submit">
+							<div class="panel-body">No 'Button' properties.</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading" role="tab" id="heading-bs-user-text-field">
+							<h4 class="panel-title">
+								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="true"
+									aria-controls="collapse-bs-user-text-field"><span class="component-label" data-component-type="bs-user-text-field"> Text Field (value = username) <span
+										class="drag small glyphicon glyphicon-move"></span>
+								</span></a>
+							</h4>
+						</div>
+						<div id="collapse-bs-user-text-field" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-user-text-field">
+							<div class="panel-body">No properties.</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading" role="tab" id="heading-bs-hidden-field">
+							<h4 class="panel-title">
+								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="true"
+									aria-controls="collapse-bs-hidden-field"><span class="component-label" data-component-type="bs-hidden-field"> Hidden Field <span
+										class="drag small glyphicon glyphicon-move"></span>
+								</span></a>
+							</h4>
+						</div>
+						<div id="collapse-bs-hidden-field" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-hidden-field">
+							<div class="panel-body">No properties.</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading" role="tab" id="heading-bs-text-link">
+							<h4 class="panel-title">
+								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="true"
+									aria-controls="collapse-bs-text-link"><span class="component-label" data-component-type="bs-text-link"> Text Link <span
+										class="drag small glyphicon glyphicon-move"></span>
+								</span></a>
+							</h4>
+						</div>
+						<div id="collapse-bs-text-link" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-text-link">
+							<div class="panel-body">No properties.</div>
+						</div>
+					</div>
+					<div class="panel panel-default">
+						<div class="panel-heading" role="tab" id="heading-bs-table">
+							<h4 class="panel-title">
+								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseSeven" aria-expanded="true"
+									aria-controls="collapse-bs-table"><span class="component-label" data-component-type="bs-table"> Table <span
+										class="drag small glyphicon glyphicon-move"></span>
+								</span></a>
+							</h4>
+						</div>
+						<div id="collapse-bs-table" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-bs-table">
+							<div class="panel-body">No properties.</div>
 						</div>
 					</div>
 				</div>

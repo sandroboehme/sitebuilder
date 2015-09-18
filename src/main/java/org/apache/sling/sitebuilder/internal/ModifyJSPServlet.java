@@ -26,6 +26,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -52,11 +54,18 @@ import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.ValueMap;
+import org.apache.sling.commons.json.JSONArray;
+import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.servlets.post.AbstractPostOperation;
 import org.apache.sling.servlets.post.JSONResponse;
 import org.apache.sling.servlets.post.Modification;
 import org.apache.sling.servlets.post.ModificationType;
 import org.apache.sling.servlets.post.PostResponse;
+import org.apache.sling.sitebuilder.SlingCallComponent;
+import org.apache.sling.sitebuilder.SlingIncludeComponent;
+import org.apache.sling.sitebuilder.api.DefaultFrontendComponent;
+import org.apache.sling.sitebuilder.api.FrontendComponent;
+import org.apache.sling.sitebuilder.api.ModifyServletOperation;
 import org.apache.sling.sitebuilder.internal.scriptstackresolver.ScriptContainer;
 import org.apache.sling.sitebuilder.internal.scriptstackresolver.ScriptContainerResolverIfc;
 
@@ -82,6 +91,11 @@ public class ModifyJSPServlet extends AbstractPostOperation {
 	private Pattern notEmptyPattern = Pattern.compile(".*");
 	private Pattern componentPattern = Pattern.compile(".*component.*");
 	private ScriptContainerResolverIfc scriptContainerResolver = null;
+	private static Map<String, FrontendComponent> componentRegistry = new HashMap<String, FrontendComponent>();
+	static {
+		componentRegistry.put(SlingIncludeComponent.TYPE_NAME, new SlingIncludeComponent());
+		componentRegistry.put(SlingCallComponent.TYPE_NAME, new SlingCallComponent());
+	}
 	
 //	TODO: prevent the move of a sling:call into a sling:include 
 
@@ -95,6 +109,7 @@ public class ModifyJSPServlet extends AbstractPostOperation {
 		
 		String scriptIdStackString = request.getParameter("scriptIdStack");
 		String referenceScriptIdStackString = request.getParameter("referenceScriptIdStack");
+		String addedComponentDataString = request.getParameter("addedComponentData");
 		
 		final ResourceResolver resourceResolver = request.getResourceResolver();
 		
@@ -145,6 +160,20 @@ public class ModifyJSPServlet extends AbstractPostOperation {
 				referenceIdOutputDocument= sameScriptResources ? idOutputDocument : new OutputDocument(referenceIdJspSource);
 				sourceElementOutput = handleComponentId(newComponentId, sourceElement, sameResources, operation);
 				targetElement = getComponentElement(referenceElementId, referenceIdJspSource);
+				if (operation.isAddOperation()){
+					try {
+						//TODO: make available not only for the HTML tag but for custom tag as well
+						String dataComponentType = sourceElement.getAttributeValue("data-component-type");
+						FrontendComponent frontendComponent = componentRegistry.get(dataComponentType);
+						if (frontendComponent != null) {
+							frontendComponent.setClientParameters(new JSONArray(addedComponentDataString));
+							frontendComponent.processServerScript(operation, sourceElement, sourceElementOutput, id, targetElement, referenceElementId);
+						}
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 			if (operation.isOrderOperation()){
 				idOutputDocument.remove(sourceElement);
@@ -184,17 +213,12 @@ public class ModifyJSPServlet extends AbstractPostOperation {
 				}
 			}
 
-			Resource IdScriptContainerResource = resolvedIdScriptContainer.getResource();
-			Resource sourceResource = resourceResolver.getResource(IdScriptContainerResource.getPath()+"/"+id);
-			if (sourceResource != null && (operation.isAddOperation() || operation.isOrderOperation())){
-				Resource targetParentResource = resolvedReferenceIdScriptContainer.getResource();
-				if (!sameResources || operation.isAddOperation()){
-					copy(resourceResolver, sourceResource, targetParentResource, ""+newComponentId);
-				}
+			String dataComponentType = sourceElement.getAttributeValue("data-component-type");
+			FrontendComponent frontendComponent = componentRegistry.get(dataComponentType);
+			if (frontendComponent == null) {
+				frontendComponent = new DefaultFrontendComponent();
 			}
-			if (sourceResource != null && ((!sameResources && operation.isOrderOperation()) || operation == ModifyServletOperation.DELETE)){
-				resourceResolver.delete(sourceResource);
-			}
+			frontendComponent.processResources(operation, resourceResolver, newComponentId, id, resolvedIdScriptContainer, resolvedReferenceIdScriptContainer, sameResources);
 
 			
 			writeOutputDocuments(idScriptResource, referenceIdScriptToChange, sameScriptResources, idJspSource,
@@ -305,6 +329,7 @@ private Element getComponentElement(String id, Source idJspSource) {
 		ModifiableValueMap properties = content.adaptTo(ModifiableValueMap.class);
 		if (properties == null) throw new RepositoryException("Couldn't persist the change. Are you logged in?");
 		properties.put("jcr:data", is);
+		properties.put("jcr:lastModified", Calendar.getInstance());
 	}
 
 	public void unsetScriptContainerResolver(final ScriptContainerResolverIfc scriptContainerResolver) {
@@ -315,24 +340,4 @@ private Element getComponentElement(String id, Source idJspSource) {
 		this.scriptContainerResolver = scriptContainerResolver;
 	}
 
-	enum ModifyServletOperation {
-		ORDERBEFORE, ORDERAFTER, ORDERWITHINFIRST, ORDERWITHINLAST, ADDBEFORE, ADDAFTER, ADDWITHINFIRST, ADDWITHINLAST, DELETE;
-	
-		public static ModifyServletOperation lookup(String anOperation) {
-			for (ModifyServletOperation op : ModifyServletOperation.values()) {
-				if (op.name().equalsIgnoreCase(anOperation)) {
-					return op;
-				}
-			}
-			return null;
-		}
-		
-		public boolean isAddOperation(){
-			return this == ADDBEFORE || this == ADDAFTER || this == ADDWITHINFIRST || this == ADDWITHINLAST;
-		}
-		
-		public boolean isOrderOperation(){
-			return this == ORDERBEFORE || this == ORDERAFTER || this == ORDERWITHINFIRST || this == ORDERWITHINLAST;
-		}
-	}
 }

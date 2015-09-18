@@ -13,13 +13,14 @@ var iFrameContent = null;
 			return idStack.join("_");
 		}
 		
-		function postJSPChange(operation, componentId, scriptIdStack, referenceElementId, referenceScriptIdStack, sortable, idComponent, lastId){
+		function postJSPChange(operation, componentId, scriptIdStack, referenceElementId, referenceScriptIdStack, sortable, idComponent, lastId, addedComponentData){
 			var thisIdComponent = idComponent;
 			$.ajax({
 				type: "POST",
 				success: function( data ) {
 					thisIdComponent.attr("data-component-id",data.newComponentId);
 					makeComponentsEditable();
+					refreshIframeHeight();
 				},
 				data: { 
 					":operation": "modify-jsp",
@@ -28,7 +29,8 @@ var iFrameContent = null;
 					"referenceElementId": referenceElementId,
 					"scriptIdStack": scriptIdStack,
 					"referenceScriptIdStack": referenceScriptIdStack,
-					"lastId": lastId
+					"lastId": lastId,
+					"addedComponentData": addedComponentData
 					},
 				dataType: "json",
 				url: $('#iframe_editor').get(0).contentWindow.location.href
@@ -50,7 +52,6 @@ var iFrameContent = null;
 				var href = $(this).parents(".script-container:first").attr('data-resource-path');
 				var componentWrapper = $(this).parents(".component-wrapper:first");
 				var component = componentWrapper.find('.component:first');
-//				var componentNodeName = getScriptContainerStack(component)+"_"+component.attr("data-component-id");
 				var componentNodeName = component.attr("data-component-id");
 				href = "/reseditor"+href+"/"+componentNodeName+".html";
 				$(this).attr("href", href);
@@ -161,10 +162,6 @@ var iFrameContent = null;
 			    	var addedComponent = typeof ui.item != "undefined" && ui.item != null && ui.item.data("addedComponent");
 
 			    	if (addedComponent) {
-//			    		addId(ui.item.find(".component:first"));
-//			    		ui.item.find(".component-container").each(function( index ) {
-//			    			addId($( this ));
-//			    		});
 			    		// removes the fixed width and height that the draggable has set
 				    	$(ui.item).removeAttr("style");
 			    	}
@@ -204,7 +201,8 @@ var iFrameContent = null;
 					var referenceScriptIdStack = getScriptContainerStack(referenceComponent);
 					var idComponent = ui.item.find(".component:first");
 					var lastId = getLastId(referenceComponent, idComponent);
-					postJSPChange(operation, idComponent.attr("data-component-id"), scriptIdStack, referenceElementId, referenceScriptIdStack, $(this), idComponent, lastId);
+					var addedComponentData = JSON.stringify(ui.item.data("componentData"));
+					postJSPChange(operation, idComponent.attr("data-component-id"), scriptIdStack, referenceElementId, referenceScriptIdStack, $(this), idComponent, lastId, addedComponentData);
 		    	}
 		    });
 		}
@@ -214,6 +212,8 @@ var iFrameContent = null;
 		org.sling = org.sling || {};
 		org.sling.sitebuilder = org.sling.sitebuilder || {};
 		org.sling.sitebuilder.componentScripts = {};
+		
+		
 		
 		$( document ).ready(function() {
 			$('#iframe_editor').load(function () {
@@ -234,12 +234,14 @@ var iFrameContent = null;
 					start: function( event, ui ) {
 						var componentType = $(this).attr("data-component-type");
 						var newComponent = $("#"+componentType+" .component:first").clone();
+						var componentData = $('#'+componentType+'-entry form').serializeArray();
 						ui.helper.empty();
 						ui.helper.append($('#prototypes .component-wrapper .component-toolbar').clone())
 						ui.helper.append(newComponent);
 						ui.helper.removeClass();
 						ui.helper.addClass("component-wrapper");
 						ui.helper.data("addedComponent", true);
+						ui.helper.data("componentData", componentData);
 					},
 					stop: function(event, ui){
 						makeContainerSortable();
@@ -260,16 +262,19 @@ var iFrameContent = null;
 					var compType = component.attr('data-component-type'); 
 					toolbar.prepend("<span class='component-type'>"+compType+"</span>");
 				});
-				
-	            refreshIframeHeight();
 
 //				order of events: 1. receive, 2. sortable stop, 3. draggable stop
-				
+
 				makeContainerSortable();
+				
 				makeComponentsDeletable();
+				
 				serverSideEnrichment();
 				
 				$('[data-toggle="tooltip"]').tooltip();
-				
+
+				$( document ).ajaxComplete(function() {
+		            refreshIframeHeight();
+				});
 			});
 		});

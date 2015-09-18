@@ -21,24 +21,33 @@
 				function serverSideEnrichment() {
 					var scriptStacks = [];
 					$('.script-container').each(function(){
-						var parentStack = getScriptContainerStack($(this));
-						if ("" === parentStack) { // root script container
-							scriptStacks.push($(this).attr("data-component-id"));
-						} else {
-							scriptStacks.push(parentStack+"_"+$(this).attr("data-component-id"));
+						if ($(this).parents(".component-stock").length == 0) {
+							var parentStack = getScriptContainerStack($(this));
+							if ("" === parentStack) { // root script container
+								scriptStacks.push($(this).attr("data-component-id"));
+							} else {
+								scriptStacks.push(parentStack+"_"+$(this).attr("data-component-id"));
+							}
 						}
 					});
-					var scriptStacksParameter = scriptStacks.join("&scriptIdStack=");
-					var href = location.href+".scriptcontainer?scriptIdStack="+scriptStacksParameter;
-					$.getJSON(href, function(data){
-						$(data).each(function(){
-							var resPath = this.resolvedScriptStack.resourcePath;
-							var scriptContainer = getScriptContainer(this.scriptStack);
-		
-						   scriptContainer.attr("data-resource-path",resPath);
+					if (scriptStacks.length>0){ //not needed e.g. in the component-stack
+						var scriptStacksParameter = scriptStacks.join("&scriptIdStack=");
+						var host = location.host;
+						var pathname = location.pathname;
+						if (pathname.startsWith("/pageeditor")){
+							pathname = pathname.substring("/pageeditor".length);
+						}
+						var href = "http://"+host+pathname+".scriptcontainer?scriptIdStack="+scriptStacksParameter;
+						$.getJSON(href, function(data){
+							$(data).each(function(){
+								var resPath = this.resolvedScriptStack.resourcePath;
+								var scriptContainer = getScriptContainer(this.scriptStack);
+			
+							   scriptContainer.attr("data-resource-path",resPath);
+							});
+							callComponentScripts();
 						});
-						callComponentScripts();
-					});
+					}
 				}
 				
 				function getScriptContainer(scriptStack){

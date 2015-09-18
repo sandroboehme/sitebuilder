@@ -65,7 +65,7 @@ public class ScriptContainerResolver implements ScriptContainerResolverIfc  {
 					String nextId = scriptIdStack.next();
 					Element sourceElement = jspSource.getFirstElement("data-component-id", nextId, true);
 					String scriptContainerType = sourceElement.getAttributeValue("data-component-type");
-					if ("call-script".equals(scriptContainerType)) {
+					if ("sling-call".equals(scriptContainerType)) {
 						Element slingCallElement = sourceElement.getFirstElement("sling:call");
 						String scriptName = slingCallElement.getAttributeValue("script");
 						servlet = servletResolver.resolveServlet(resource, scriptName);
