@@ -105,8 +105,8 @@
 			<sb:component componentId="10">
 				<sling:adaptTo adaptable="${componentResource}" adaptTo="org.apache.sling.api.resource.ValueMap" var="componentProps" />
 				<div class="form-group component" data-component-type="bs-text-field" ${componentIdAttribute}>
-					<label for="${componentProps.nameAndId}"><c:out value="${componentProps.label}" /></label> <input type="text"
-						class="form-control" id="${componentProps.nameAndId}" name="${componentProps.nameAndId}" value="${componentProps.value}">
+					<label for="${componentProps.nameAndId}"><c:out value="${componentProps.label}" /></label> 
+					<input type="text" class="form-control" id="${componentProps.nameAndId}" name="${componentProps.nameAndId}" value="${componentProps.value}">
 				</div>
 			</sb:component>
 		</div>
