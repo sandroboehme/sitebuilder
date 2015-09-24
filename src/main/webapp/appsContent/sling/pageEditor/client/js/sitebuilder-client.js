@@ -79,7 +79,7 @@
 			Client.prototype.getComponentJSON = function(component, callback) {
 				var url = $(component).parents(".script-container:first").attr('data-resource-path');
 				url= url+"/"+$(component).attr('data-component-id');
-				url= url+".json";
+				url= url+".infinity.json";
 				var thisComponent = this;
 				$.getJSON( url, function( data ) {
 					callback(data);
