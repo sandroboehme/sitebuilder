@@ -50,7 +50,7 @@ public class ComponentTag extends BodyTagSupport {
 		
 		savePageContextAttributes();
 
-		removePageContextAttributes();
+		removePageContextAttributesExceptSlingAndJSP();
 
 		setSitebuilderAttributes();
 
@@ -59,6 +59,7 @@ public class ComponentTag extends BodyTagSupport {
 
 	@Override
 	public int doEndTag() {
+		removeAllPageContextAttributes();
 		restorePageContextAttributes();
 		return EVAL_PAGE;
 	}
@@ -84,24 +85,36 @@ public class ComponentTag extends BodyTagSupport {
 		this.pageContext.setAttribute(ATTRIBUTE_COMPONENT_RESOURCE,componentResource);
 	}
 
-	private void removePageContextAttributes() {
+	private void removePageContextAttributesExceptSlingAndJSP() {
+		Set<String> attributesToKeepSet = new HashSet<String>();
+		attributesToKeepSet.addAll(Arrays.asList(attributesToKeep));
 		Set<String> attributes = this.pageContextAttributes.keySet();
-		for (String attribute : attributes) {
-			this.pageContext.removeAttribute(attribute);
+		for (String attributeName : attributes) {
+			boolean noJSPAttrib = !attributeName.startsWith(JSP_PAGE_ATTRIB_PREFIX);
+			boolean noSlingAttrib = !attributesToKeepSet.contains(attributeName);
+			if (noJSPAttrib && noSlingAttrib){
+				this.pageContext.removeAttribute(attributeName);
+			}
+		}
+	}
+
+	private void removeAllPageContextAttributes() {
+		Set<String> attributeNamesSet = new HashSet<String>();
+		Enumeration<?> attributeNames = this.pageContext.getAttributeNamesInScope(PageContext.PAGE_SCOPE);
+		while (attributeNames.hasMoreElements()) {
+			String attributeName = (String) attributeNames.nextElement();
+			attributeNamesSet.add(attributeName);
+		}
+		for (String attributeName : attributeNamesSet) {
+			this.pageContext.removeAttribute(attributeName);
 		}
 	}
 
 	private void savePageContextAttributes() {
-		Set<String> attributesToKeepSet = new HashSet<String>();
-		attributesToKeepSet.addAll(Arrays.asList(attributesToKeep));
 		Enumeration<?> attributeNames = this.pageContext.getAttributeNamesInScope(PageContext.PAGE_SCOPE);
 		while (attributeNames.hasMoreElements()) {
 			String attributeName = (String) attributeNames.nextElement();
-			boolean noJSPAttrib = !attributeName.startsWith(JSP_PAGE_ATTRIB_PREFIX);
-			boolean noSlingAttrib = !attributesToKeepSet.contains(attributeName);
-			if (noJSPAttrib && noSlingAttrib){
-				pageContextAttributes.put(attributeName, this.pageContext.getAttribute(attributeName));
-			}
+			pageContextAttributes.put(attributeName, this.pageContext.getAttribute(attributeName));
 		}
 	}
 

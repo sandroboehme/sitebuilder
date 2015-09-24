@@ -12,6 +12,7 @@
     },
     "6" : {
     	"brand": "Apache",
+    	"homeURL": "/lux-car-rental/home.html",
     	"1" : {
 	    	"href" : "http://www.apache.org",
 	    	"linkText": "Apache"

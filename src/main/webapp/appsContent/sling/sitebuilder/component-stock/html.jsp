@@ -64,7 +64,7 @@
 				<nav class="component navbar navbar-default" data-component-type="bs-navbar" ${componentIdAttribute}>
 					<div class="container-fluid">
 						<div class="navbar-header">
-							<a class="navbar-brand" href="/carRental/home.html"><c:out value="${componentProps.brand}" /></a>
+							<a class="navbar-brand" href="${componentProps.homeURL}"><c:out value="${componentProps.brand}" /></a>
 						</div>
 						<!-- Collect the nav links, forms, and other content for toggling -->
 						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
