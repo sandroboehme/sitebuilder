@@ -1,19 +1,15 @@
 package org.apache.sling.sitebuilder.api;
 
-import java.util.Map;
-
-import javax.jcr.AccessDeniedException;
-
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.OutputDocument;
 
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
-import org.apache.sling.api.resource.ValueMap;
 import org.apache.sling.commons.json.JSONArray;
 import org.apache.sling.commons.json.JSONException;
 import org.apache.sling.commons.json.JSONObject;
+import org.apache.sling.sitebuilder.internal.ResourceUtils;
 import org.apache.sling.sitebuilder.internal.scriptstackresolver.ScriptContainer;
 
 public class DefaultFrontendComponent implements FrontendComponent {
@@ -48,11 +44,11 @@ public class DefaultFrontendComponent implements FrontendComponent {
 			ScriptContainer resolvedIdScriptContainer, ScriptContainer resolvedReferenceIdScriptContainer, boolean sameResources) throws PersistenceException {
 		try {
 			Resource IdScriptContainerResource = resolvedIdScriptContainer.getResource();
-			Resource sourceResource = resourceResolver.getResource(IdScriptContainerResource.getPath() + "/" + sourceComponentId);
+			Resource sourceResource = operation.isAddOperation() ? IdScriptContainerResource : resourceResolver.getResource(IdScriptContainerResource.getPath() + "/" + sourceComponentId);
 			if (sourceResource != null && (operation.isAddOperation() || operation.isOrderOperation())) {
 				Resource targetParentResource = resolvedReferenceIdScriptContainer.getResource();
 				if (!sameResources || operation.isAddOperation()) {
-					copy(resourceResolver, sourceResource, targetParentResource, "" + newComponentId);
+					ResourceUtils.copy(resourceResolver, sourceResource, targetParentResource, "" + newComponentId);
 				}
 			}
 			if (sourceResource != null
@@ -61,27 +57,6 @@ public class DefaultFrontendComponent implements FrontendComponent {
 			}
 		} catch (PersistenceException e) {
 			throw e;
-		}
-	}
-
-	private void copy(ResourceResolver resourceResolver, Resource sourceResource, Resource targetParentResource,
-			String targetResourceName) throws PersistenceException {
-		try {
-			Map<String, Object> sourceResourceProperties = sourceResource.adaptTo(ValueMap.class);
-			resourceResolver.create(targetParentResource, targetResourceName, sourceResourceProperties);
-			Iterable<Resource> children = sourceResource.getChildren();
-			for (Resource child : children) {
-				copy(resourceResolver, child, resourceResolver.getResource(targetParentResource, targetResourceName),
-						child.getName());
-			}
-		} catch (Exception e) {
-			// TODO: Check permission in advance and fail soon?
-			// See GetEffectiveAclServlet for an example.
-			if (e != null && e.getCause() instanceof AccessDeniedException) {
-				throw new PersistenceException("Couldn't persist the change. Are you logged in?");
-			} else {
-				throw e;
-			}
 		}
 	}
 

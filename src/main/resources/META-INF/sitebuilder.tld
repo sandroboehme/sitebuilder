@@ -13,29 +13,225 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
 	version="2.1">
 
-	<description>The tag library for the Apache Sling Sitebuilder</description>
+	<description>The tag library for the Apache Sling Sitebuilder
+	</description>
 	<tlib-version>1.0-SNAPSHOT</tlib-version>
 	<short-name>sitebuilder</short-name>
- 	<uri>http://sling.apache.org/taglibs/sitebuilder</uri>
+	<uri>http://sling.apache.org/taglibs/sitebuilder</uri>
 	<tag>
+		<name>component</name>
 		<description>
 			Wraps component content and provides useful variables.
 		</description>
-		<name>component</name>
 		<tag-class>
 			org.apache.sling.sitebuilder.tld.ComponentTag
 		</tag-class>
-        <body-content>JSP</body-content>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description>
+				The base resource under which to retrieve the child
+				resource, will only
+				be considered if a relative path is specified.
+			</description>
+			<name>componentId</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+
+
+	<tag>
+		<description>
+			Includes a resource rendering into the current page
+		</description>
+		<name>include</name>
+		<tag-class>
+			org.apache.sling.sitebuilder.tld.IncludeTag
+		</tag-class>
+<!-- 		<tag-class> -->
+<!-- 			org.apache.sling.scripting.jsp.taglib.IncludeTagHandler -->
+<!-- 		</tag-class> -->
+<!-- 		<tei-class> -->
+<!-- 			org.apache.sling.scripting.jsp.taglib.tei.StringVariableTEI -->
+<!-- 		</tei-class> -->
+		<body-content>empty</body-content>
+		
+		<attribute>
+			<description>
+				Whether to flush the output before including the target
+			</description>
+			<name>componentId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>String</type>
+		</attribute>
+		<attribute>
+			<description>
+				Whether to flush the output before including the target
+			</description>
+			<name>flush</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>
+				The resource object to include in the current request
+				processing. Either resource or path must be specified. If
+				both are specified, the resource takes precedences.
+			</description>
+			<name>resource</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>org.apache.sling.api.resource.Resource</type>
+		</attribute>
+		<attribute>
+			<description>
+				The path to the resource object to include in the
+				current request processing. If this path is relative it is
+				appended to the path of the current resource whose
+				script is including the given resource. Either resource
+				or path must be specified. If both are specified, the
+				resource takes precedences.
+			</description>
+			<name>path</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				The resource type of a resource to include. If the
+				resource to be included is specified with the path attribute,
+				which cannot be resolved to a resource, the tag may
+				create a synthetic resource object out of the path and
+				this resource type. If the resource type is set the path
+				must be the exact path to a resource object. That is,
+				adding parameters, selectors and extensions to the
+				path is not supported if the resource type is set.
+			</description>
+			<name>resourceType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				When dispatching, replace selectors by the value
+				provided by this option.
+			</description>
+			<name>replaceSelectors</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				When dispatching, add the value provided by this option
+				to the selectors.
+			</description>
+			<name>addSelectors</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				When dispatching, replace the suffix by the value
+				provided by this option.
+			</description>
+			<name>replaceSuffix</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
         <attribute>
             <description>
-                The base resource under which to retrieve the child
-                resource, will only
-                be considered if a relative path is specified.
+                If var is specified, what scope to store the variable in
             </description>
-            <name>componentId</name>
-            <required>true</required>
+            <name>scope</name>
+            <required>false</required>
             <rtexprvalue>false</rtexprvalue>
+            <type>String</type>
+        </attribute>
+        <attribute>
+            <description>
+                Variable name to store the resulting markup into
+            </description>
+            <name>var</name>
+            <required>false</required>
+            <rtexprvalue>false</rtexprvalue>
+            <type>String</type>
         </attribute>
 	</tag>
+	
+<!-- 
+	<tag>
+		<description>
+			Includes a resource rendering into the current page
+		</description>
+		<name>include</name>
+		<tag-class>
+			org.apache.sling.sitebuilder.tld.IncludeTag
+		</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description>
+				Whether to flush the output before including the target
+			</description>
+			<name>flush</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description>
+				The resource object to include in the current request
+				processing. Either resource or path must be specified. If
+				both are specified, the resource takes precedences.
+			</description>
+			<name>resource</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>org.apache.sling.api.resource.Resource</type>
+		</attribute>
+		<attribute>
+			<description>
+				The path to the resource object to include in the
+				current request processing. If this path is relative it is
+				appended to the path of the current resource whose
+				script is including the given resource. Either resource
+				or path must be specified. If both are specified, the
+				resource takes precedences.
+			</description>
+			<name>path</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				When dispatching, replace selectors by the value
+				provided by this option.
+			</description>
+			<name>replaceSelectors</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				When dispatching, add the value provided by this option
+				to the selectors.
+			</description>
+			<name>addSelectors</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description>
+				When dispatching, replace the suffix by the value
+				provided by this option.
+			</description>
+			<name>replaceSuffix</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+ -->
+	
 </taglib>
 

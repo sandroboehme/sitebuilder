@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="sling" uri="http://sling.apache.org/taglibs/sling"%>
 <%@ taglib prefix="sb" uri="http://sling.apache.org/taglibs/sitebuilder"%>
+<%@ taglib prefix="sb2" uri="http://sling.apache.org/taglibs/sitebuilder2"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <sling:defineObjects />
@@ -12,7 +13,7 @@
 				<div class="col-xs-4 component-container"></div>
 				<div class="col-xs-4 component-container"></div>
 				<div class="col-xs-4 component-container"></div>
-			</div>
+			</div>		
 		</div>
 		<div id="bs-row-12" class="preview-container">
 			<div class="row component" data-component-type="bs-row-12" data-component-id="2">
@@ -28,33 +29,29 @@
 			</sb:component>
 		</div>
 		<div id="bs-p" class="preview-container">
-			<sb:component componentId="4">
-				<sling:adaptTo adaptable="${componentResource}" adaptTo="org.apache.sling.api.resource.ValueMap" var="componentProps" />
-				<p class="component" data-component-type="bs-p" ${componentIdAttribute}>
-					<c:out value="${sling:getValue(componentProps,'value','Paragraph Content')}" />
-				</p>
-			</sb:component>
+			<sb2:component componentId="4" resourceType="sling/sitebuilder/components/sling/bootstrap/general/paragraph"/>
 		</div>
 		<div id="img" class="preview-container">
 			<span class="component" data-component-type="img" data-component-id="5"> <img style="max-width: 100%; max-height: 100%;"
-				src="" alt="Image"> <script type="text/javascript">
-					// creating the namespace
-					var org = org || {};
-					org.carrental = org.carrental || {};
-					//defining the module
-					org.carrental.ImageLoader = org.carrental.ImageLoader || (function() {
-						function ImageLoader() {
-							var thatImageLoader = this;
-							$('[data-component-type="img"]').each(function() {
-								var thisComponent = this;
-								org.sling.sitebuilder.client.getComponentJSON(this, function(data) {
-									$(thisComponent).children("img:first").attr("src", data.src);
-								});
-							});
-						}
-						return ImageLoader;
-					}());
-					org.sling.sitebuilder.componentScripts["org.carrental.imageLoader"] = org.carrental.ImageLoader;
+				src="" alt="Image"> 
+				<script type="text/javascript">
+ 					// creating the namespace
+ 					var org = org || {};
+ 					org.carrental = org.carrental || {};
+ 					//defining the module
+ 					org.carrental.ImageLoader = org.carrental.ImageLoader || (function() {
+ 						function ImageLoader() {
+ 							var thatImageLoader = this;
+ 							$('[data-component-type="img"]').each(function() {
+ 								var thisComponent = this;
+ 								org.sling.sitebuilder.client.getComponentJSON(this, function(data) {
+ 									$(thisComponent).children("img:first").attr("src", data.src);
+ 								});
+ 							});
+ 						}
+ 						return ImageLoader;
+ 					}());
+ 					org.sling.sitebuilder.componentScripts["org.carrental.imageLoader"] = org.carrental.ImageLoader;
 				</script>
 			</span>
 		</div>
@@ -85,7 +82,8 @@
 		</div>
 		<div id="sling-include" class="preview-container">
 			<div class="component script-container" data-component-type="sling-include" data-component-id="7">
-				<sling:include path="/sitebuilder" resourceType="org/bootstrap" />
+				<sling:include path="/sitebuilder" resourceType="sling/web-page" />
+<%-- 				<sling:include path="/sitebuilder" resourceType="org/bootstrap" /> --%>
 			</div>
 		</div>
 		<div id="sling-call" class="preview-container">

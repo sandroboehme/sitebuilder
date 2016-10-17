@@ -1,0 +1,14 @@
+<nav class="component navbar navbar-default" data-component-id="${resource.name}">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="${resource.homeURL}">${resource.brand} ${resourcePath}</a>
+		</div>
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav" data-sly-list.menuitem="${resource.listChildren}">
+					<li data-sly-use.resourcePathEndsWithHref="${'navbar.js' @ href=menuitem.href}" class="${resourcePathEndsWithHref ? 'active' : ''}">
+						<a href="${menuitem.href}">${menuitem.linkText}</a>
+					</li>
+			</ul>
+		</div> <!-- /.navbar-collapse -->
+	</div> <!-- /.container-fluid -->
+</nav>

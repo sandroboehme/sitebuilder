@@ -1,0 +1,10 @@
+//  You can find out more documentation on this topic 
+//  by following these links:
+//
+//    -  http://sling.apache.org/site/content-loading.html
+//    -  http://jackrabbit.apache.org/node-type-notation.html
+
+<sb = 'http://sling.apache.org/sitebuilder/1.0'>
+
+[sb:toolbar] mixin
+    - label (string)

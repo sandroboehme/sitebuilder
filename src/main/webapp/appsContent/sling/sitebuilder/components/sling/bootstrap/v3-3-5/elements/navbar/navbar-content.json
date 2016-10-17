@@ -1,0 +1,15 @@
+{
+  "jcr:primaryType": "nt:unstructured",
+  "brand": "Luxury Car Rental",
+  "homeURL": "/lux-car-rental/home.html",
+  "1": {
+    "jcr:primaryType": "nt:unstructured",
+    "href": "/lux-car-rental/cars.html",
+    "linkText": "Cars"
+    },
+  "2": {
+    "jcr:primaryType": "nt:unstructured",
+    "href": "/lux-car-rental/my-booking.html",
+    "linkText": "My Bookings"
+    }
+  }

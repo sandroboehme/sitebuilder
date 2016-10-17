@@ -22,4 +22,12 @@ public interface ScriptContainerResolverIfc {
 	 */
 	public String getGETMethodScriptPath(SlingHttpServletRequest request, boolean removeExtension);
 
+	/**
+	 * @param request
+	 * @param contentPath
+	 * @param resourceType
+	 * @return
+	 */
+	public ScriptContainer resolve(SlingHttpServletRequest request, String contentPath, String resourceType);
+
 }

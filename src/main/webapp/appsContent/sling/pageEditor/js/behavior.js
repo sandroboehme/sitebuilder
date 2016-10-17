@@ -13,7 +13,7 @@ var iFrameContent = null;
 			return idStack.join("_");
 		}
 		
-		function postJSPChange(operation, componentId, scriptIdStack, referenceElementId, referenceScriptIdStack, sortable, idComponent, lastId, addedComponentData){
+		function postJSPChange(operation, componentId, scriptIdStack, referenceElementId, referenceScriptIdStack, sortable, idComponent, lastId, addedComponentData, componentType){
 			var thisIdComponent = idComponent;
 			$.ajax({
 				type: "POST",
@@ -30,7 +30,8 @@ var iFrameContent = null;
 					"scriptIdStack": scriptIdStack,
 					"referenceScriptIdStack": referenceScriptIdStack,
 					"lastId": lastId,
-					"addedComponentData": addedComponentData
+					"addedComponentData": addedComponentData,
+					"componentType": componentType
 					},
 				dataType: "json",
 				url: $('#iframe_editor').get(0).contentWindow.location.href
@@ -202,7 +203,8 @@ var iFrameContent = null;
 					var idComponent = ui.item.find(".component:first");
 					var lastId = getLastId(referenceComponent, idComponent);
 					var addedComponentData = JSON.stringify(ui.item.data("componentData"));
-					postJSPChange(operation, idComponent.attr("data-component-id"), scriptIdStack, referenceElementId, referenceScriptIdStack, $(this), idComponent, lastId, addedComponentData);
+					var componentType = ui.item.data("componentType");
+					postJSPChange(operation, idComponent.attr("data-component-id"), scriptIdStack, referenceElementId, referenceScriptIdStack, $(this), idComponent, lastId, addedComponentData, componentType);
 		    	}
 		    });
 		}
@@ -233,15 +235,20 @@ var iFrameContent = null;
 			        cursorAt: { top: 0, left: 0 },
 					start: function( event, ui ) {
 						var componentType = $(this).attr("data-component-type");
-						var newComponent = $("#"+componentType+" .component:first").clone();
-						var componentData = $('#'+componentType+'-entry form').serializeArray();
+						var newComponent = $('.component-prototypes [data-component-type="'+componentType+'"].preview-container .component:first').clone();
+						if (newComponent.length == 0) { // fuer alte Toolbar
+							newComponent = $("#"+componentType+" .component:first").clone();
+						}
+						// e.g. sling-include-entry 's include properties to use
+//						var componentData = $('#'+componentType+'-entry form').serializeArray();
 						ui.helper.empty();
 						ui.helper.append($('#prototypes .component-wrapper .component-toolbar').clone())
 						ui.helper.append(newComponent);
 						ui.helper.removeClass();
 						ui.helper.addClass("component-wrapper");
 						ui.helper.data("addedComponent", true);
-						ui.helper.data("componentData", componentData);
+						ui.helper.data("componentType", componentType);
+//						ui.helper.data("componentData", componentData);
 					},
 					stop: function(event, ui){
 						makeContainerSortable();

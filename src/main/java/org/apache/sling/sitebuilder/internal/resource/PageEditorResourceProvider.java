@@ -32,7 +32,7 @@ import org.apache.sling.api.resource.ResourceResolver;
 import org.apache.sling.api.resource.SyntheticResource;
 
 /**
- * The Resource Provider that wraps all Resources under {@link ROOT_PATHELEMENT_NAME} with the {@link ResourceTypeResourceWrapper}.
+ * The Resource Provider that wraps all Resources under {@link ROOT_PATHELEMENT_NAME} with the {@link InheritanceProviderResourceWrapper}.
  *
  */
 @Component

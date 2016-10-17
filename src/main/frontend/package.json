@@ -1,0 +1,46 @@
+{
+  "dependencies": {
+    "body-parser": "^1.14.1",
+    "express": "^4.13.3",
+    "jspm": "^0.16.14",
+    "multer": "^1.1.0"
+  },
+  "jspm": {
+    "directories": {
+      "baseURL": "mount",
+      "packages": "mount/jspm/jspm_packages"
+    },
+    "configFile": "mount/jspm/config.js",
+    "dependencies": {
+      "lightbox2": "github:lokesh/lightbox2@^2.8.1"
+    },
+    "devDependencies": {
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    },
+    "overrides": {
+      "github:lokesh/lightbox2@2.8.2": {
+        "format": "global",
+        "registry": "jspm",
+        "main": "dist/js/lightbox.js",
+        "dependencies": {
+          "jquery": "*",
+          "css": "*"
+        },
+        "shim": {
+          "dist/js/lightbox": {
+            "deps": [
+              "jquery",
+              "../css/lightbox.css!"
+            ],
+            "exports": "$"
+          }
+        }
+      }
+    }
+  },
+  "scripts": {
+    "start": "node/node serve.js"
+  }
+}

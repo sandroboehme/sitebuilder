@@ -111,6 +111,26 @@ public class ScriptContainerResolver implements ScriptContainerResolverIfc  {
 		return resolvedScriptContainer;
 	}
 	
+
+	@Override
+	public ScriptContainer resolve(SlingHttpServletRequest request, String contentPath, String resourceType) {
+        ResourceResolver resourceResolver = request.getResourceResolver();
+		ScriptContainer resolvedScriptContainer = new ScriptContainer();
+        Resource includeResource = resourceResolver.resolve(contentPath);
+        SlingHttpServletRequest scriptResolvingRequest = new ScriptContainerResolvingRequestWrapper(request, includeResource, resourceType, false);
+        // see SlingRequestProcessorImpl.dispatchRequest()
+        Servlet servlet = servletResolver.resolveServlet(scriptResolvingRequest);
+		if (servlet != null) {
+			String scriptPath = RequestUtil.getServletName(servlet);
+			Resource scriptResource = resourceResolver.getResource(scriptPath);
+	        resolvedScriptContainer.setScriptResource(scriptResource);
+	        resolvedScriptContainer.setResource(includeResource);
+		} else {
+			// TODO handle error
+		}
+		return resolvedScriptContainer;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.apache.sling.sitebuilder.internal.scriptstackresolver.ScriptContainerResolverIfc#getGETMethodScriptPath(org.apache.sling.api.SlingHttpServletRequest, boolean)
 	 */

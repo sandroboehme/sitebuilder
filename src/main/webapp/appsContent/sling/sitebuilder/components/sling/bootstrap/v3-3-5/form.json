@@ -1,0 +1,5 @@
+{
+	"jcr:primaryType": "sling:Folder",
+	"jcr:mixinTypes": ["sb:toolbar"],
+	"label": "Bootstrap 3.3.5 Form"
+}

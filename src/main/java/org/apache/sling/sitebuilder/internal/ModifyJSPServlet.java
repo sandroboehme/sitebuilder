@@ -88,6 +88,7 @@ public class ModifyJSPServlet extends AbstractPostOperation {
 	private static final long serialVersionUID = -1L;
 	private static final String COMPONENT_STOCK_SCRIPT_PATH = "/apps/sling/sitebuilder/component-stock/html.jsp";
 	private static final String COMPONENT_STOCK_DOMAIN_CONTENT_PATH = "/sitebuilder/componentStock";
+	private static final String COMPONENTS_PATH = "/apps/sling/sitebuilder/components";
 	private Pattern notEmptyPattern = Pattern.compile(".*");
 	private Pattern componentPattern = Pattern.compile(".*component.*");
 	private ScriptContainerResolverIfc scriptContainerResolver = null;
@@ -110,73 +111,95 @@ public class ModifyJSPServlet extends AbstractPostOperation {
 		String scriptIdStackString = request.getParameter("scriptIdStack");
 		String referenceScriptIdStackString = request.getParameter("referenceScriptIdStack");
 		String addedComponentDataString = request.getParameter("addedComponentData");
+		final String componentType = request.getParameter("componentType");
 		
 		final ResourceResolver resourceResolver = request.getResourceResolver();
 		
 		ScriptContainer resolvedIdScriptContainer = null;
-		if (operation.isAddOperation()){
-			resolvedIdScriptContainer = new ScriptContainer(){
-				public Resource getResource() {
-					return resourceResolver.getResource(COMPONENT_STOCK_DOMAIN_CONTENT_PATH);
-				}
-				public Resource getScriptResource() {
-					return resourceResolver.getResource(COMPONENT_STOCK_SCRIPT_PATH);
-				}
-			};
-		} else {
-			resolvedIdScriptContainer = scriptContainerResolver.resolve(scriptIdStackString, request, false);
-		}
-		Resource idScriptResource = resolvedIdScriptContainer.getScriptResource();
-		InputStream idInputStream = idScriptResource.adaptTo(InputStream.class);
-
-		ScriptContainer resolvedReferenceIdScriptContainer = null;
-		Resource referenceIdScriptToChange = null;
-		boolean sameScriptResources = false;
-		boolean sameResources = true;
-		InputStream referenceIdInputStream = null;
-		
-		if (operation.isAddOperation() || operation.isOrderOperation()){
-			resolvedReferenceIdScriptContainer = scriptContainerResolver.resolve(referenceScriptIdStackString, request, false);
-			referenceIdScriptToChange = resolvedReferenceIdScriptContainer.getScriptResource();
-			sameScriptResources = idScriptResource.getPath().equals(referenceIdScriptToChange.getPath());
-			sameResources = resolvedIdScriptContainer.getResource().getPath().equals(resolvedReferenceIdScriptContainer.getResource().getPath());
-			referenceIdInputStream = sameScriptResources ? idInputStream : referenceIdScriptToChange.adaptTo(InputStream.class);
-		}
-
+		Resource idScriptResource = null; 
+		InputStream idInputStream = null;
+		Source idJspSource = null;
+		OutputDocument idOutputDocument=null;
+		Element sourceElement = null; 
 		try {
-			Source idJspSource = new Source(idInputStream);
+			if (operation.isAddOperation()){
+				if (componentType != null && componentType.startsWith("/")) {// for old toolbar
+					//resolvedIdScriptContainer = scriptContainerResolver.resolve(request, COMPONENTS_PATH+componentType+"/content", COMPONENTS_PATH+componentType);
+					resolvedIdScriptContainer = new ScriptContainer(){
+						public Resource getResource() {
+							String toolbarItemName = componentType.substring(componentType.lastIndexOf("/")+1);
+							return resourceResolver.getResource(COMPONENTS_PATH+componentType+"/"+toolbarItemName+"-content");
+						}
+						public Resource getScriptResource() {
+							return null;
+						}
+					};
+				} else {
+					resolvedIdScriptContainer = new ScriptContainer(){
+						public Resource getResource() {
+							return resourceResolver.getResource(COMPONENT_STOCK_DOMAIN_CONTENT_PATH);
+						}
+						public Resource getScriptResource() {
+							return resourceResolver.getResource(COMPONENT_STOCK_SCRIPT_PATH);
+						}
+					};
+				}
+			} else {
+				resolvedIdScriptContainer = scriptContainerResolver.resolve(scriptIdStackString, request, false);
+				idScriptResource = resolvedIdScriptContainer.getScriptResource();
+				idInputStream = idScriptResource.adaptTo(InputStream.class);
+				idJspSource = new Source(idInputStream);
+				idOutputDocument=new OutputDocument(idJspSource);
+				sourceElement = getComponentElement(id, idJspSource);
+			}
+	
+			ScriptContainer resolvedReferenceIdScriptContainer = null;
+			Resource referenceIdScriptToChange = null;
+			boolean sameScriptResources = false;
+			boolean sameResources = true;
+			InputStream referenceIdInputStream = null;
 			
-			OutputDocument idOutputDocument=new OutputDocument(idJspSource);
 			Source referenceIdJspSource = null;
 			OutputDocument referenceIdOutputDocument= null;
 			
-			Element sourceElement = getComponentElement(id, idJspSource);
 			OutputDocument sourceElementOutput = null;
 			Element targetElement = null;
 			int newComponentId = 0;
 			if (operation.isAddOperation() || operation.isOrderOperation()){
 				newComponentId = Integer.parseInt(lastIdString)+1;
-				referenceIdJspSource = sameScriptResources ? idJspSource : new Source(referenceIdInputStream);
-				referenceIdOutputDocument= sameScriptResources ? idOutputDocument : new OutputDocument(referenceIdJspSource);
-				sourceElementOutput = handleComponentId(newComponentId, sourceElement, sameResources, operation);
-				targetElement = getComponentElement(referenceElementId, referenceIdJspSource);
-				if (operation.isAddOperation()){
-					try {
-						//TODO: make available not only for the HTML tag but for custom tag as well
-						String dataComponentType = sourceElement.getAttributeValue("data-component-type");
-						FrontendComponent frontendComponent = componentRegistry.get(dataComponentType);
-						if (frontendComponent != null) {
-							frontendComponent.setClientParameters(new JSONArray(addedComponentDataString));
-							frontendComponent.processServerScript(operation, sourceElement, sourceElementOutput, id, targetElement, referenceElementId);
-						}
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				resolvedReferenceIdScriptContainer = scriptContainerResolver.resolve(referenceScriptIdStackString, request, false);
+				referenceIdScriptToChange = resolvedReferenceIdScriptContainer.getScriptResource();
+				if (operation.isOrderOperation()){
+					sameScriptResources = idScriptResource.getPath().equals(referenceIdScriptToChange.getPath());
+					sameResources = resolvedIdScriptContainer.getResource().getPath().equals(resolvedReferenceIdScriptContainer.getResource().getPath());
+					referenceIdInputStream = sameScriptResources ? idInputStream : referenceIdScriptToChange.adaptTo(InputStream.class);
+					referenceIdJspSource = sameScriptResources ? idJspSource : new Source(referenceIdInputStream);
+					referenceIdOutputDocument= sameScriptResources ? idOutputDocument : new OutputDocument(referenceIdJspSource);
+					sourceElementOutput = handleComponentId(newComponentId, sourceElement, sameResources, operation);
+					targetElement = getComponentElement(referenceElementId, referenceIdJspSource);
+					idOutputDocument.remove(sourceElement);
 				}
-			}
-			if (operation.isOrderOperation()){
-				idOutputDocument.remove(sourceElement);
+				if (operation.isAddOperation()){
+					String includeString = "<sb2:component resourceType=\""+COMPONENTS_PATH+componentType+"\" componentId=\""+newComponentId+"\"/>";
+					Source source = new Source(includeString);
+					sourceElementOutput = new OutputDocument(source);
+					referenceIdInputStream = referenceIdScriptToChange.adaptTo(InputStream.class);
+					referenceIdJspSource = new Source(referenceIdInputStream);
+					referenceIdOutputDocument= new OutputDocument(referenceIdJspSource);
+					targetElement = getComponentElement(referenceElementId, referenceIdJspSource);
+//					try {
+//						//TODO: make available not only for the HTML tag but for custom tag as well
+//						String dataComponentType = sourceElement.getAttributeValue("data-component-type");
+//						FrontendComponent frontendComponent = componentRegistry.get(dataComponentType);
+//						if (frontendComponent != null) {
+//							frontendComponent.setClientParameters(new JSONArray(addedComponentDataString));
+//							frontendComponent.processServerScript(operation, sourceElement, sourceElementOutput, id, targetElement, referenceElementId);
+//						}
+//					} catch (JSONException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+				}
 			}
 			
 			switch (operation) {
@@ -213,8 +236,8 @@ public class ModifyJSPServlet extends AbstractPostOperation {
 				}
 			}
 
-			String dataComponentType = sourceElement.getAttributeValue("data-component-type");
-			FrontendComponent frontendComponent = componentRegistry.get(dataComponentType);
+//			String dataComponentType = sourceElement.getAttributeValue("data-component-type");
+			FrontendComponent frontendComponent = null;//componentRegistry.get(dataComponentType);
 			if (frontendComponent == null) {
 				frontendComponent = new DefaultFrontendComponent();
 			}
@@ -225,8 +248,8 @@ public class ModifyJSPServlet extends AbstractPostOperation {
 					referenceIdJspSource, idOutputDocument, referenceIdOutputDocument, operation);
 			
 			resourceResolver.commit();
-			
-			Modification modification = new Modification(ModificationType.MODIFY, idScriptResource.getPath(), referenceIdScriptToChange==null ? "" : referenceIdScriptToChange.getPath());
+			String sourceScriptPath = idScriptResource == null ? COMPONENTS_PATH+componentType : idScriptResource.getPath();
+			Modification modification = new Modification(ModificationType.MODIFY, sourceScriptPath, referenceIdScriptToChange==null ? "" : referenceIdScriptToChange.getPath());
 			modifications.add(modification);
 			
 			if (postResponse instanceof JSONResponse) {
@@ -246,13 +269,15 @@ public class ModifyJSPServlet extends AbstractPostOperation {
 private void writeOutputDocuments(Resource idScriptResource, Resource referenceIdScriptToChange, boolean sameScriptResources,
 		Source idJspSource, Source referenceIdJspSource, OutputDocument idOutputDocument, OutputDocument referenceIdOutputDocument, ModifyServletOperation operation)
 		throws IOException, PersistenceException, RepositoryException {
-	File idScriptFile = idScriptResource.adaptTo(File.class);
-	if (idScriptFile != null) {
-		idOutputDocument.writeTo(new FileWriter(idScriptFile));
-	} else {
-		CharArrayWriter idWriter = new CharArrayWriter();
-		idOutputDocument.writeTo(idWriter); //idInputStream
-		writeOutputToScript(idOutputDocument, idScriptResource, idWriter.toString(), idJspSource.getEncoding());
+	if (idScriptResource!=null){
+		File idScriptFile = idScriptResource.adaptTo(File.class);
+		if (idScriptFile != null) {
+			idOutputDocument.writeTo(new FileWriter(idScriptFile));
+		} else {
+			CharArrayWriter idWriter = new CharArrayWriter();
+			idOutputDocument.writeTo(idWriter); //idInputStream
+			writeOutputToScript(idOutputDocument, idScriptResource, idWriter.toString(), idJspSource.getEncoding());
+		}
 	}
 	
 	if (!sameScriptResources && operation != ModifyServletOperation.DELETE) {
@@ -263,25 +288,6 @@ private void writeOutputDocuments(Resource idScriptResource, Resource referenceI
 			CharArrayWriter referenceIdWriter = new CharArrayWriter();
 			referenceIdOutputDocument.writeTo(referenceIdWriter); // referenceIdInputStream
 			writeOutputToScript(referenceIdOutputDocument, referenceIdScriptToChange, referenceIdWriter.toString(), referenceIdJspSource.getEncoding());
-		}
-	}
-}
-	
-private void copy(ResourceResolver resourceResolver, Resource sourceResource, Resource targetParentResource, String targetResourceName) throws PersistenceException {
-	try {
-		Map<String,Object> sourceResourceProperties = sourceResource.adaptTo(ValueMap.class);
-		resourceResolver.create(targetParentResource, targetResourceName, sourceResourceProperties);
-		Iterable<Resource> children = sourceResource.getChildren();
-		for (Resource child : children) {
-			copy(resourceResolver, child, resourceResolver.getResource(targetParentResource, targetResourceName), child.getName());
-		}
-	} catch (Exception e) {
-		// TODO: Check permission in advance and fail soon?
-		// See GetEffectiveAclServlet for an example.
-		if (e != null && e.getCause() instanceof AccessDeniedException) {
-			throw new PersistenceException("Couldn't persist the change. Are you logged in?");
-		} else {
-			throw e;
 		}
 	}
 }
