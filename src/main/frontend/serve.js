@@ -40,7 +40,8 @@ app.post('/install', function(req, res){
  	};
  	
     var options = JSON.parse(req.body["options"]);
-    
+
+        // see http://jspm.io/docs/api.html#installname-target--options--promise    
  	// details to the available options:
  	// https://github.com/jspm/jspm-cli/blob/master/lib/install.js#L71
  	jspm.install(req.body["name"], req.body["target"], options).then(installSuccessful, installUnsuccessful);
