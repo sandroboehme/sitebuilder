@@ -31,6 +31,11 @@
 				<filtering>false</filtering>
 			</resource>
 			<resource>
+				<directory>src/main/frontend/mount</directory>
+				<targetPath>MOUNT</targetPath>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
 				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
@@ -87,7 +92,7 @@
                         <Sling-Nodetypes>SLING-INF/nodetypes/nodetypes.cnd</Sling-Nodetypes>
 						<Sling-Initial-Content>
 							SLING-INF/appsContent;overwrite:=true;ignoreImportProviders:=xml;path:=/apps,
-							SLING-INF/jspm;overwrite:=true;overwriteProperties:=true;ignoreImportProviders:=xml;path:=/jspm
+							MOUNT/jspm;overwrite:=true;overwriteProperties:=true;ignoreImportProviders:=xml;path:=/jspm
 						</Sling-Initial-Content>
 <!-- 						<Sling-Initial-Content> -->
 <!-- 							SLING-INF/appsContent;overwrite:=true;ignoreImportProviders:=xml;path:=/apps, -->
